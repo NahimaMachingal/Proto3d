@@ -79,6 +79,12 @@ Update CORS settings in the FastAPI backend.
 Check browser console logs for **missing assets** or **incorrect file paths**.
 
 ---
+### Provided 3D Model Files
+
+- **Material File:** [capsule.mtl](https://raw.githubusercontent.com/your-username/your-repo/main/path/to/capsule.mtl)
+- **Texture File:** [capsule0.jpg](https://raw.githubusercontent.com/your-username/your-repo/main/path/to/capsule0.jpg)
+
+
 
 ## Learn More
 - **[Next.js Documentation](https://nextjs.org/docs)** – Learn about Next.js features and API.
