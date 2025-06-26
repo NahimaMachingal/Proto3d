@@ -477,99 +477,115 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$bui
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$module$2e$js__$5b$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/three/build/three.module.js [client] (ecmascript) <locals>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$examples$2f$jsm$2f$controls$2f$OrbitControls$2e$js__$5b$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/three/examples/jsm/controls/OrbitControls.js [client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$examples$2f$jsm$2f$loaders$2f$OBJLoader$2e$js__$5b$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/three/examples/jsm/loaders/OBJLoader.js [client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/prop-types/index.js [client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
 ;
-const ModelViewer = ()=>{
+;
+const ModelViewer = ({ modelPath, texturePath })=>{
     _s();
     const mountRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "ModelViewer.useEffect": ()=>{
+            // Constants
+            const BACKGROUND_COLOR = 0xf0f0f0;
+            const CAMERA_POSITION_Z = 5;
+            const LIGHT_INTENSITY = {
+                ambient: 0.5,
+                directional: 0.8
+            };
             // Scene setup
             const scene = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Scene"]();
-            scene.background = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Color"](0xf0f0f0);
-            // Add helpers for debugging
-            const axesHelper = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["AxesHelper"](5);
-            scene.add(axesHelper);
-            const gridHelper = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["GridHelper"](10, 10);
-            scene.add(gridHelper);
-            // Camera setup
+            scene.background = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Color"](BACKGROUND_COLOR);
+            // Helpers
+            const helpers = {
+                axes: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["AxesHelper"](5),
+                grid: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["GridHelper"](10, 10)
+            };
+            scene.add(helpers.axes);
+            scene.add(helpers.grid);
+            // Camera
             const camera = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["PerspectiveCamera"](75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-            // Renderer setup
+            camera.position.z = CAMERA_POSITION_Z;
+            // Renderer
             const renderer = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$module$2e$js__$5b$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["WebGLRenderer"]({
                 antialias: true
             });
             renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
             mountRef.current.appendChild(renderer.domElement);
-            // Add lights
-            const ambientLight = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["AmbientLight"](0xffffff, 0.5);
-            scene.add(ambientLight);
-            const directionalLight = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["DirectionalLight"](0xffffff, 0.8);
-            directionalLight.position.set(1, 1, 1);
-            scene.add(directionalLight);
-            // Orbit Controls
+            // Lights
+            const lights = {
+                ambient: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["AmbientLight"](0xffffff, LIGHT_INTENSITY.ambient),
+                directional: new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["DirectionalLight"](0xffffff, LIGHT_INTENSITY.directional)
+            };
+            lights.directional.position.set(1, 1, 1);
+            scene.add(lights.ambient);
+            scene.add(lights.directional);
+            // Controls
             const controls = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$examples$2f$jsm$2f$controls$2f$OrbitControls$2e$js__$5b$client$5d$__$28$ecmascript$29$__["OrbitControls"](camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.25;
             controls.enableZoom = true;
-            controls.update();
-            // Load the model with texture directly
-            const objLoader = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$examples$2f$jsm$2f$loaders$2f$OBJLoader$2e$js__$5b$client$5d$__$28$ecmascript$29$__["OBJLoader"]();
-            objLoader.load("/capsule.obj", {
-                "ModelViewer.useEffect": (obj)=>{
-                    console.log("OBJ loaded successfully");
-                    // Apply a texture directly instead of using MTL
+            // Model loading
+            const loadModel = {
+                "ModelViewer.useEffect.loadModel": ()=>{
+                    const objLoader = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$examples$2f$jsm$2f$loaders$2f$OBJLoader$2e$js__$5b$client$5d$__$28$ecmascript$29$__["OBJLoader"]();
                     const textureLoader = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["TextureLoader"]();
-                    textureLoader.load("/capsule0.jpg", {
-                        "ModelViewer.useEffect": (texture)=>{
-                            console.log("Texture loaded successfully");
-                            // Apply texture to all meshes in the object
-                            obj.traverse({
-                                "ModelViewer.useEffect": (child)=>{
-                                    if (child instanceof __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Mesh"]) {
-                                        child.material = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["MeshStandardMaterial"]({
-                                            map: texture,
-                                            roughness: 0.7,
-                                            metalness: 0.0
-                                        });
-                                    }
+                    objLoader.load(modelPath, {
+                        "ModelViewer.useEffect.loadModel": (obj)=>{
+                            textureLoader.load(texturePath, {
+                                "ModelViewer.useEffect.loadModel": (texture)=>{
+                                    applyMaterialToModel(obj, texture);
+                                    centerAndScaleModel(obj);
+                                    scene.add(obj);
+                                    adjustCameraToModel(obj, camera, controls);
                                 }
-                            }["ModelViewer.useEffect"]);
-                            // Center the model
-                            const box = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Box3"]().setFromObject(obj);
-                            const center = box.getCenter(new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Vector3"]());
-                            obj.position.sub(center);
-                            // Scale the model if needed
-                            // obj.scale.set(0.1, 0.1, 0.1); // Uncomment and adjust if model is too large/small
-                            // Add the model to the scene
-                            scene.add(obj);
-                            console.log("Model added to scene");
-                            // Adjust camera to see the whole model
-                            const size = box.getSize(new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Vector3"]());
-                            const maxDim = Math.max(size.x, size.y, size.z);
-                            camera.position.z = maxDim * 2;
-                            controls.update();
+                            }["ModelViewer.useEffect.loadModel"], undefined, {
+                                "ModelViewer.useEffect.loadModel": (error)=>console.error('Texture loading error:', error)
+                            }["ModelViewer.useEffect.loadModel"]);
                         }
-                    }["ModelViewer.useEffect"], undefined, {
-                        "ModelViewer.useEffect": (error)=>{
-                            console.error("Error loading texture:", error);
+                    }["ModelViewer.useEffect.loadModel"], {
+                        "ModelViewer.useEffect.loadModel": (xhr)=>console.log(`Model loading: ${xhr.loaded / xhr.total * 100}%`)
+                    }["ModelViewer.useEffect.loadModel"], {
+                        "ModelViewer.useEffect.loadModel": (error)=>console.error('Model loading error:', error)
+                    }["ModelViewer.useEffect.loadModel"]);
+                }
+            }["ModelViewer.useEffect.loadModel"];
+            const applyMaterialToModel = {
+                "ModelViewer.useEffect.applyMaterialToModel": (obj, texture)=>{
+                    obj.traverse({
+                        "ModelViewer.useEffect.applyMaterialToModel": (child)=>{
+                            if (child instanceof __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Mesh"]) {
+                                child.material = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["MeshStandardMaterial"]({
+                                    map: texture,
+                                    roughness: 0.7,
+                                    metalness: 0.0
+                                });
+                            }
                         }
-                    }["ModelViewer.useEffect"]);
+                    }["ModelViewer.useEffect.applyMaterialToModel"]);
                 }
-            }["ModelViewer.useEffect"], {
-                "ModelViewer.useEffect": (xhr)=>{
-                    console.log(xhr.loaded / xhr.total * 100 + "% loaded");
+            }["ModelViewer.useEffect.applyMaterialToModel"];
+            const centerAndScaleModel = {
+                "ModelViewer.useEffect.centerAndScaleModel": (obj)=>{
+                    const box = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Box3"]().setFromObject(obj);
+                    const center = box.getCenter(new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Vector3"]());
+                    obj.position.sub(center);
                 }
-            }["ModelViewer.useEffect"], {
-                "ModelViewer.useEffect": (error)=>{
-                    console.error("Error loading model:", error);
+            }["ModelViewer.useEffect.centerAndScaleModel"];
+            const adjustCameraToModel = {
+                "ModelViewer.useEffect.adjustCameraToModel": (obj, camera, controls)=>{
+                    const box = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Box3"]().setFromObject(obj);
+                    const size = box.getSize(new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$three$2f$build$2f$three$2e$core$2e$js__$5b$client$5d$__$28$ecmascript$29$__["Vector3"]());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    camera.position.z = maxDim * 2;
+                    controls.update();
                 }
-            }["ModelViewer.useEffect"]);
-            // Animation loop
+            }["ModelViewer.useEffect.adjustCameraToModel"];
+            // Animation
             const animate = {
                 "ModelViewer.useEffect.animate": ()=>{
                     requestAnimationFrame(animate);
@@ -577,8 +593,7 @@ const ModelViewer = ()=>{
                     renderer.render(scene, camera);
                 }
             }["ModelViewer.useEffect.animate"];
-            animate();
-            // Handle window resize
+            // Event handlers
             const handleResize = {
                 "ModelViewer.useEffect.handleResize": ()=>{
                     camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
@@ -586,32 +601,40 @@ const ModelViewer = ()=>{
                     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
                 }
             }["ModelViewer.useEffect.handleResize"];
-            window.addEventListener("resize", handleResize);
+            // Initial setup
+            loadModel();
+            animate();
+            window.addEventListener('resize', handleResize);
             // Cleanup
             return ({
                 "ModelViewer.useEffect": ()=>{
-                    window.removeEventListener("resize", handleResize);
-                    if (mountRef.current && renderer.domElement) {
-                        mountRef.current.removeChild(renderer.domElement);
-                    }
+                    window.removeEventListener('resize', handleResize);
+                    mountRef.current?.removeChild(renderer.domElement);
                 }
             })["ModelViewer.useEffect"];
         }
-    }["ModelViewer.useEffect"], []);
+    }["ModelViewer.useEffect"], [
+        modelPath,
+        texturePath
+    ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         ref: mountRef,
         style: {
-            width: "100%",
-            height: "100%"
+            width: '100%',
+            height: '100%'
         }
     }, void 0, false, {
         fileName: "[project]/components/ModelViewer.js",
-        lineNumber: 140,
+        lineNumber: 144,
         columnNumber: 10
     }, this);
 };
 _s(ModelViewer, "V9/qkEdV8GfsDZk7lMTA1T8g5Ps=");
 _c = ModelViewer;
+ModelViewer.propTypes = {
+    modelPath: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["default"].string.isRequired,
+    texturePath: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["default"].string.isRequired
+};
 const __TURBOPACK__default__export__ = ModelViewer;
 var _c;
 __turbopack_context__.k.register(_c, "ModelViewer");
@@ -626,20 +649,24 @@ var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_
 {
 // pages/index.js
 __turbopack_context__.s({
-    "default": (()=>Home)
+    "default": (()=>__TURBOPACK__default__export__)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react/jsx-dev-runtime.js [client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/styled-jsx/style.js [client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react/index.js [client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$head$2e$js__$5b$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/head.js [client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ModelViewer$2e$js__$5b$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ModelViewer.js [client] (ecmascript)");
+(()=>{
+    const e = new Error("Cannot find module '../styles/Home.module.css'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
 ;
 var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
 ;
-function Home() {
+const Home = ()=>{
     _s();
     const [data, setData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useState"])({
         pythonModelInfo: null,
@@ -649,16 +676,15 @@ function Home() {
     });
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Home.useEffect": ()=>{
-            const fetchData = {
-                "Home.useEffect.fetchData": async ()=>{
+            const fetchModelData = {
+                "Home.useEffect.fetchModelData": async ()=>{
                     try {
                         const [pythonRes, nextRes] = await Promise.all([
-                            fetch("http://localhost:8000/python-model-info"),
-                            fetch("/api/nextjs-model-info")
+                            fetch('http://localhost:8000/python-model-info'),
+                            fetch('/api/nextjs-model-info')
                         ]);
-                        if (!pythonRes.ok || !nextRes.ok) {
-                            throw new Error("Failed to fetch data from one or more backends.");
-                        }
+                        if (!pythonRes.ok) throw new Error('Failed to fetch Python model info');
+                        if (!nextRes.ok) throw new Error('Failed to fetch Next.js model info');
                         const [pythonData, nextData] = await Promise.all([
                             pythonRes.json(),
                             nextRes.json()
@@ -671,45 +697,41 @@ function Home() {
                         });
                     } catch (error) {
                         setData({
-                            "Home.useEffect.fetchData": (prev)=>({
+                            "Home.useEffect.fetchModelData": (prev)=>({
                                     ...prev,
                                     error: error.message,
                                     loading: false
                                 })
-                        }["Home.useEffect.fetchData"]);
+                        }["Home.useEffect.fetchModelData"]);
                     }
                 }
-            }["Home.useEffect.fetchData"];
-            fetchData();
+            }["Home.useEffect.fetchModelData"];
+            fetchModelData();
         }
     }["Home.useEffect"], []);
-    const { pythonModelInfo, nextModelInfo, error, loading } = data;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "jsx-3be97078d84711a8" + " " + "container",
+        className: styles.container,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$head$2e$js__$5b$client$5d$__$28$ecmascript$29$__["default"], {
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("title", {
-                        className: "jsx-3be97078d84711a8",
                         children: "3D Model Viewer"
                     }, void 0, false, {
                         fileName: "[project]/pages/index.js",
-                        lineNumber: 49,
+                        lineNumber: 52,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("meta", {
                         name: "description",
-                        content: "3D Model Viewer with integrated backends",
-                        className: "jsx-3be97078d84711a8"
+                        content: "3D Model Viewer with integrated backends"
                     }, void 0, false, {
                         fileName: "[project]/pages/index.js",
-                        lineNumber: 50,
+                        lineNumber: 53,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("link", {
                         rel: "icon",
-                        href: "/favicon.ico",
-                        className: "jsx-3be97078d84711a8"
+                        href: "/favicon.ico"
                     }, void 0, false, {
                         fileName: "[project]/pages/index.js",
                         lineNumber: 54,
@@ -718,14 +740,14 @@ function Home() {
                 ]
             }, void 0, true, {
                 fileName: "[project]/pages/index.js",
-                lineNumber: 48,
+                lineNumber: 51,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-                className: "jsx-3be97078d84711a8",
+                className: styles.main,
                 children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                        className: "jsx-3be97078d84711a8",
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                        className: styles.title,
                         children: "3D Model Viewer"
                     }, void 0, false, {
                         fileName: "[project]/pages/index.js",
@@ -733,186 +755,56 @@ function Home() {
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-3be97078d84711a8" + " " + "viewer-container",
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ModelViewer$2e$js__$5b$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                        className: styles.viewerContainer,
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ModelViewer$2e$js__$5b$client$5d$__$28$ecmascript$29$__["default"], {
+                            modelPath: "/capsule.obj",
+                            texturePath: "/capsule0.jpg"
+                        }, void 0, false, {
                             fileName: "[project]/pages/index.js",
                             lineNumber: 61,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/pages/index.js",
-                        lineNumber: 59,
+                        lineNumber: 60,
                         columnNumber: 9
                     }, this),
-                    loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "jsx-3be97078d84711a8",
-                        children: "Loading data..."
+                    data.loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        children: "Loading model information..."
                     }, void 0, false, {
                         fileName: "[project]/pages/index.js",
-                        lineNumber: 65,
+                        lineNumber: 68,
                         columnNumber: 11
-                    }, this) : error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "jsx-3be97078d84711a8" + " " + "error",
-                        children: error
+                    }, this) : data.error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: styles.error,
+                        children: data.error
                     }, void 0, false, {
                         fileName: "[project]/pages/index.js",
-                        lineNumber: 67,
+                        lineNumber: 70,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-3be97078d84711a8" + " " + "info-container",
+                        className: styles.infoContainer,
                         children: [
-                            pythonModelInfo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-3be97078d84711a8" + " " + "info-panel",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                        className: "jsx-3be97078d84711a8",
-                                        children: "Python Backend Info"
-                                    }, void 0, false, {
-                                        fileName: "[project]/pages/index.js",
-                                        lineNumber: 72,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "jsx-3be97078d84711a8",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                className: "jsx-3be97078d84711a8",
-                                                children: "Model Name:"
-                                            }, void 0, false, {
-                                                fileName: "[project]/pages/index.js",
-                                                lineNumber: 73,
-                                                columnNumber: 20
-                                            }, this),
-                                            " ",
-                                            pythonModelInfo.model_name
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/pages/index.js",
-                                        lineNumber: 73,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "jsx-3be97078d84711a8",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                className: "jsx-3be97078d84711a8",
-                                                children: "Vertex Count:"
-                                            }, void 0, false, {
-                                                fileName: "[project]/pages/index.js",
-                                                lineNumber: 74,
-                                                columnNumber: 20
-                                            }, this),
-                                            " ",
-                                            pythonModelInfo.vertex_count
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/pages/index.js",
-                                        lineNumber: 74,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "jsx-3be97078d84711a8",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                className: "jsx-3be97078d84711a8",
-                                                children: "Texture Details:"
-                                            }, void 0, false, {
-                                                fileName: "[project]/pages/index.js",
-                                                lineNumber: 75,
-                                                columnNumber: 20
-                                            }, this),
-                                            " ",
-                                            pythonModelInfo.texture_details
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/pages/index.js",
-                                        lineNumber: 75,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ModelInfoPanel, {
+                                title: "Python Backend Info",
+                                data: data.pythonModelInfo
+                            }, void 0, false, {
                                 fileName: "[project]/pages/index.js",
-                                lineNumber: 71,
-                                columnNumber: 15
+                                lineNumber: 73,
+                                columnNumber: 13
                             }, this),
-                            nextModelInfo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-3be97078d84711a8" + " " + "info-panel",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                        className: "jsx-3be97078d84711a8",
-                                        children: "Next.js Backend Info"
-                                    }, void 0, false, {
-                                        fileName: "[project]/pages/index.js",
-                                        lineNumber: 81,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "jsx-3be97078d84711a8",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                className: "jsx-3be97078d84711a8",
-                                                children: "Model Scale:"
-                                            }, void 0, false, {
-                                                fileName: "[project]/pages/index.js",
-                                                lineNumber: 82,
-                                                columnNumber: 20
-                                            }, this),
-                                            " ",
-                                            nextModelInfo.scale
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/pages/index.js",
-                                        lineNumber: 82,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "jsx-3be97078d84711a8",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                className: "jsx-3be97078d84711a8",
-                                                children: "Face Count:"
-                                            }, void 0, false, {
-                                                fileName: "[project]/pages/index.js",
-                                                lineNumber: 83,
-                                                columnNumber: 20
-                                            }, this),
-                                            " ",
-                                            nextModelInfo.face_count
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/pages/index.js",
-                                        lineNumber: 83,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "jsx-3be97078d84711a8",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                className: "jsx-3be97078d84711a8",
-                                                children: "Created By:"
-                                            }, void 0, false, {
-                                                fileName: "[project]/pages/index.js",
-                                                lineNumber: 84,
-                                                columnNumber: 20
-                                            }, this),
-                                            " ",
-                                            nextModelInfo.created_by
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/pages/index.js",
-                                        lineNumber: 84,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ModelInfoPanel, {
+                                title: "Next.js Backend Info",
+                                data: data.nextModelInfo
+                            }, void 0, false, {
                                 fileName: "[project]/pages/index.js",
-                                lineNumber: 80,
-                                columnNumber: 15
+                                lineNumber: 77,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/pages/index.js",
-                        lineNumber: 69,
+                        lineNumber: 72,
                         columnNumber: 11
                     }, this)
                 ]
@@ -920,22 +812,57 @@ function Home() {
                 fileName: "[project]/pages/index.js",
                 lineNumber: 57,
                 columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$client$5d$__$28$ecmascript$29$__["default"], {
-                id: "3be97078d84711a8",
-                children: ".container.jsx-3be97078d84711a8{flex-direction:column;justify-content:center;align-items:center;min-height:100vh;padding:0 .5rem;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;display:flex}main.jsx-3be97078d84711a8{flex-direction:column;align-items:center;gap:20px;width:100%;max-width:1200px;padding:2rem 0;display:flex}.title.jsx-3be97078d84711a8{text-align:center;color:#0070f3;margin:0 0 2rem;font-size:2.5rem;line-height:1.15}.viewer-container.jsx-3be97078d84711a8{border:1px solid #eaeaea;border-radius:10px;width:100%;height:70vh;overflow:hidden}.info-container.jsx-3be97078d84711a8{flex-direction:row;justify-content:space-around;gap:20px;width:80%;display:flex}.info-panel.jsx-3be97078d84711a8{background-color:#f9f9f9;border:1px solid #eaeaea;border-radius:10px;flex:1;padding:1.5rem;box-shadow:0 4px 6px #0000001a}.info-panel.jsx-3be97078d84711a8:hover{box-shadow:0 6px 10px #00000026}@media (width<=768px){.info-container.jsx-3be97078d84711a8{flex-direction:column;width:100%}}.viewer-container.jsx-3be97078d84711a8,.info-container.jsx-3be97078d84711a8{width:100%}.model-info.jsx-3be97078d84711a8 p.jsx-3be97078d84711a8{margin:.7rem 0}.error.jsx-3be97078d84711a8{color:#e53e3e;background-color:#fed7d7;border-radius:5px;padding:.5rem;font-weight:500}"
-            }, void 0, false, void 0, this)
+            }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/pages/index.js",
-        lineNumber: 47,
+        lineNumber: 50,
         columnNumber: 5
     }, this);
-}
-_s(Home, "E9O+io/G6UFE1e6LcclcCXc0FEM=");
+};
+_s(Home, "XiMM2cTJH94wD54QyHG/TdTURuw=");
 _c = Home;
-var _c;
+const ModelInfoPanel = ({ title, data })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: styles.infoPanel,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                children: title
+            }, void 0, false, {
+                fileName: "[project]/pages/index.js",
+                lineNumber: 90,
+                columnNumber: 5
+            }, this),
+            data && Object.entries(data).map(([key, value])=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                            children: [
+                                key.replace(/_/g, ' ').toUpperCase(),
+                                ":"
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/pages/index.js",
+                            lineNumber: 93,
+                            columnNumber: 9
+                        }, this),
+                        " ",
+                        value
+                    ]
+                }, key, true, {
+                    fileName: "[project]/pages/index.js",
+                    lineNumber: 92,
+                    columnNumber: 7
+                }, this))
+        ]
+    }, void 0, true, {
+        fileName: "[project]/pages/index.js",
+        lineNumber: 89,
+        columnNumber: 3
+    }, this);
+_c1 = ModelInfoPanel;
+const __TURBOPACK__default__export__ = Home;
+var _c, _c1;
 __turbopack_context__.k.register(_c, "Home");
+__turbopack_context__.k.register(_c1, "ModelInfoPanel");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }

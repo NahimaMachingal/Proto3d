@@ -1,0 +1,77 @@
+/* [project]/styles/Home.module.css [client] (css) */
+.Home-module__g21JLG__container {
+  min-height: 100vh;
+  padding: 0 .5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+.Home-module__g21JLG__main {
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.Home-module__g21JLG__title {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 2.5rem;
+  text-align: center;
+  color: #0070f3;
+}
+
+.Home-module__g21JLG__viewerContainer {
+  width: 100%;
+  height: 70vh;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.Home-module__g21JLG__infoContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+}
+
+.Home-module__g21JLG__infoPanel {
+  flex: 1;
+  padding: 1.5rem;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px #0000001a;
+  background-color: #f9f9f9;
+}
+
+.Home-module__g21JLG__infoPanel:hover {
+  box-shadow: 0 6px 10px #00000026;
+}
+
+.Home-module__g21JLG__error {
+  color: #e53e3e;
+  font-weight: 500;
+  padding: .5rem;
+  background-color: #fed7d7;
+  border-radius: 5px;
+}
+
+@media (width <= 768px) {
+  .Home-module__g21JLG__infoContainer {
+    flex-direction: column;
+  }
+
+  .Home-module__g21JLG__viewerContainer {
+    height: 50vh;
+  }
+}
+
+
+/*# sourceMappingURL=styles_Home_module_a57c8bc6.css.map*/

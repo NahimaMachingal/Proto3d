@@ -1,34 +1,44 @@
 // components/ModelViewer.js
-import React, { useEffect, useRef } from "react";
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import React, { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import PropTypes from 'prop-types';
 
-const ModelViewer = () => {
+const ModelViewer = ({ modelPath, texturePath }) => {
   const mountRef = useRef(null);
 
   useEffect(() => {
+    // Constants
+    const BACKGROUND_COLOR = 0xf0f0f0;
+    const CAMERA_POSITION_Z = 5;
+    const LIGHT_INTENSITY = {
+      ambient: 0.5,
+      directional: 0.8
+    };
+
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0);
+    scene.background = new THREE.Color(BACKGROUND_COLOR);
 
-    // Add helpers for debugging
-    const axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
+    // Helpers
+    const helpers = {
+      axes: new THREE.AxesHelper(5),
+      grid: new THREE.GridHelper(10, 10)
+    };
+    scene.add(helpers.axes);
+    scene.add(helpers.grid);
 
-    const gridHelper = new THREE.GridHelper(10, 10);
-    scene.add(gridHelper);
-
-    // Camera setup
+    // Camera
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 5;
+    camera.position.z = CAMERA_POSITION_Z;
 
-    // Renderer setup
+    // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(
       mountRef.current.clientWidth,
@@ -36,108 +46,107 @@ const ModelViewer = () => {
     );
     mountRef.current.appendChild(renderer.domElement);
 
-    // Add lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+    // Lights
+    const lights = {
+      ambient: new THREE.AmbientLight(0xffffff, LIGHT_INTENSITY.ambient),
+      directional: new THREE.DirectionalLight(0xffffff, LIGHT_INTENSITY.directional)
+    };
+    lights.directional.position.set(1, 1, 1);
+    scene.add(lights.ambient);
+    scene.add(lights.directional);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(1, 1, 1);
-    scene.add(directionalLight);
-
-    // Orbit Controls
+    // Controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
     controls.enableZoom = true;
-    controls.update();
 
-    // Load the model with texture directly
-    const objLoader = new OBJLoader();
-    objLoader.load(
-      "/capsule.obj",
-      (obj) => {
-        console.log("OBJ loaded successfully");
+    // Model loading
+    const loadModel = () => {
+      const objLoader = new OBJLoader();
+      const textureLoader = new THREE.TextureLoader();
 
-        // Apply a texture directly instead of using MTL
-        const textureLoader = new THREE.TextureLoader();
-        textureLoader.load(
-          "/capsule0.jpg",
-          (texture) => {
-            console.log("Texture loaded successfully");
+      objLoader.load(
+        modelPath,
+        (obj) => {
+          textureLoader.load(
+            texturePath,
+            (texture) => {
+              applyMaterialToModel(obj, texture);
+              centerAndScaleModel(obj);
+              scene.add(obj);
+              adjustCameraToModel(obj, camera, controls);
+            },
+            undefined,
+            (error) => console.error('Texture loading error:', error)
+          );
+        },
+        (xhr) => console.log(`Model loading: ${(xhr.loaded / xhr.total) * 100}%`),
+        (error) => console.error('Model loading error:', error)
+      );
+    };
 
-            // Apply texture to all meshes in the object
-            obj.traverse((child) => {
-              if (child instanceof THREE.Mesh) {
-                child.material = new THREE.MeshStandardMaterial({
-                  map: texture,
-                  roughness: 0.7,
-                  metalness: 0.0,
-                });
-              }
-            });
+    const applyMaterialToModel = (obj, texture) => {
+      obj.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.material = new THREE.MeshStandardMaterial({
+            map: texture,
+            roughness: 0.7,
+            metalness: 0.0,
+          });
+        }
+      });
+    };
 
-            // Center the model
-            const box = new THREE.Box3().setFromObject(obj);
-            const center = box.getCenter(new THREE.Vector3());
-            obj.position.sub(center);
+    const centerAndScaleModel = (obj) => {
+      const box = new THREE.Box3().setFromObject(obj);
+      const center = box.getCenter(new THREE.Vector3());
+      obj.position.sub(center);
+    };
 
-            // Scale the model if needed
-            // obj.scale.set(0.1, 0.1, 0.1); // Uncomment and adjust if model is too large/small
+    const adjustCameraToModel = (obj, camera, controls) => {
+      const box = new THREE.Box3().setFromObject(obj);
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      camera.position.z = maxDim * 2;
+      controls.update();
+    };
 
-            // Add the model to the scene
-            scene.add(obj);
-            console.log("Model added to scene");
-
-            // Adjust camera to see the whole model
-            const size = box.getSize(new THREE.Vector3());
-            const maxDim = Math.max(size.x, size.y, size.z);
-            camera.position.z = maxDim * 2;
-            controls.update();
-          },
-          undefined,
-          (error) => {
-            console.error("Error loading texture:", error);
-          }
-        );
-      },
-      (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-      },
-      (error) => {
-        console.error("Error loading model:", error);
-      }
-    );
-
-    // Animation loop
+    // Animation
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
       renderer.render(scene, camera);
     };
-    animate();
 
-    // Handle window resize
+    // Event handlers
     const handleResize = () => {
-      camera.aspect =
-        mountRef.current.clientWidth / mountRef.current.clientHeight;
+      camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(
         mountRef.current.clientWidth,
         mountRef.current.clientHeight
       );
     };
-    window.addEventListener("resize", handleResize);
+
+    // Initial setup
+    loadModel();
+    animate();
+    window.addEventListener('resize', handleResize);
 
     // Cleanup
     return () => {
-      window.removeEventListener("resize", handleResize);
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
-      }
+      window.removeEventListener('resize', handleResize);
+      mountRef.current?.removeChild(renderer.domElement);
     };
-  }, []);
+  }, [modelPath, texturePath]);
 
-  return <div ref={mountRef} style={{ width: "100%", height: "100%" }} />;
+  return <div ref={mountRef} style={{ width: '100%', height: '100%' }} />;
+};
+
+ModelViewer.propTypes = {
+  modelPath: PropTypes.string.isRequired,
+  texturePath: PropTypes.string.isRequired
 };
 
 export default ModelViewer;

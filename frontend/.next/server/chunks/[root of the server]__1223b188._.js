@@ -18,13 +18,25 @@ __turbopack_context__.s({
     "default": (()=>handler)
 });
 function handler(req, res) {
-    // Hardcoded model information
-    const modelInfo = {
-        scale: "1.0",
-        face_count: 412,
-        created_by: "Paul Bourke, March 2012"
-    };
-    res.status(200).json(modelInfo);
+    if (req.method !== 'GET') {
+        return res.status(405).json({
+            message: 'Method not allowed'
+        });
+    }
+    try {
+        const modelInfo = {
+            scale: "1.0",
+            face_count: 412,
+            created_by: "Paul Bourke, March 2012"
+        };
+        res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
+        res.status(200).json(modelInfo);
+    } catch (error) {
+        console.error('Error in nextjs-model-info:', error);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    }
 }
 }}),
 "[project]/node_modules/next/dist/esm/server/route-modules/pages-api/module.compiled.js [api] (ecmascript)": (function(__turbopack_context__) {
